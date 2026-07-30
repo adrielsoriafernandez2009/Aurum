@@ -51,7 +51,7 @@ export default async function MovimientosPage() {
             <Download className="mr-2 h-4 w-4" />
             Exportar
           </Button>
-          <TransactionDialog accounts={accounts} categories={categories} />
+          <TransactionDialog accounts={JSON.parse(JSON.stringify(accounts))} categories={JSON.parse(JSON.stringify(categories))} />
         </div>
       </div>
 
@@ -121,7 +121,7 @@ export default async function MovimientosPage() {
                     </TableCell>
                     <TableCell>
                       <div onClick={(e) => e.stopPropagation()} className="opacity-0 group-hover:opacity-100 transition-opacity flex justify-end">
-                        <TransactionDialog transaction={JSON.parse(JSON.stringify(mov))} accounts={accounts} categories={categories} />
+                        <TransactionDialog transaction={JSON.parse(JSON.stringify(mov))} accounts={JSON.parse(JSON.stringify(accounts))} categories={JSON.parse(JSON.stringify(categories))} />
                       </div>
                     </TableCell>
                   </TableRow>

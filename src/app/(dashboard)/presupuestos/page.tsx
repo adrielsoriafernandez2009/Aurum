@@ -42,7 +42,7 @@ export default async function PresupuestosPage() {
             <Settings2 className="mr-2 h-4 w-4" />
             Configurar Global
           </Button>
-          <BudgetDialog categories={categories} />
+          <BudgetDialog categories={JSON.parse(JSON.stringify(categories))} />
         </div>
       </div>
 
@@ -73,7 +73,7 @@ export default async function PresupuestosPage() {
                       {percentage.toFixed(0)}%
                     </span>
                     <div onClick={(e) => e.stopPropagation()}>
-                      <BudgetDialog budget={JSON.parse(JSON.stringify(pres))} categories={categories} />
+                      <BudgetDialog budget={JSON.parse(JSON.stringify(pres))} categories={JSON.parse(JSON.stringify(categories))} />
                     </div>
                   </div>
                 </CardHeader>
