@@ -13,6 +13,13 @@ export default async function DashboardPage() {
   const now = new Date()
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
 
+  // Get goals
+  const objetivos = await prisma.goal.findMany({
+    where: { workspaceId: workspace.id },
+    orderBy: { createdAt: 'desc' },
+    take: 3
+  })
+
   const transactions = await prisma.transaction.findMany({
     where: { workspaceId: workspace.id },
     orderBy: { date: 'desc' },

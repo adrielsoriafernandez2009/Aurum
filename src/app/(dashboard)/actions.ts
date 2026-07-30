@@ -84,4 +84,45 @@ export async function createTransaction(formData: FormData) {
   revalidatePath('/movimientos')
   revalidatePath('/cuentas')
   revalidatePath('/dashboard')
+  revalidatePath('/estadisticas')
+  revalidatePath('/presupuestos')
+}
+
+export async function createBudget(formData: FormData) {
+  const workspace = await getCurrentWorkspace()
+  
+  const categoryId = formData.get('categoryId') as string || null
+  const amount = parseFloat(formData.get('amount') as string || '0')
+  const period = formData.get('period') as string || 'MONTHLY'
+
+  await prisma.budget.create({
+    data: {
+      workspaceId: workspace.id,
+      categoryId,
+      amount,
+      period,
+    }
+  })
+
+  revalidatePath('/presupuestos')
+}
+
+export async function createGoal(formData: FormData) {
+  const workspace = await getCurrentWorkspace()
+  
+  const name = formData.get('name') as string
+  const targetAmount = parseFloat(formData.get('targetAmount') as string || '0')
+  const savedAmount = parseFloat(formData.get('savedAmount') as string || '0')
+
+  await prisma.goal.create({
+    data: {
+      workspaceId: workspace.id,
+      name,
+      targetAmount,
+      savedAmount,
+    }
+  })
+
+  revalidatePath('/objetivos')
+  revalidatePath('/dashboard')
 }
