@@ -57,6 +57,9 @@ export default async function CuentasPage() {
                       <p className="text-xs text-muted-foreground">{cuenta.type}</p>
                     </div>
                   </div>
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <AccountDialog account={cuenta} />
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <div className={`text-3xl font-bold mt-4 ${cuenta.balance < 0 ? 'text-rose-500' : 'text-zinc-900 dark:text-zinc-100'}`}>

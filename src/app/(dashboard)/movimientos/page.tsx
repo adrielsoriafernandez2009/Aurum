@@ -120,21 +120,9 @@ export default async function MovimientosPage() {
                       {mov.type === 'EXPENSE' ? '-' : '+'}{new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(mov.amount)}
                     </TableCell>
                     <TableCell>
-                      <DropdownMenu>
-                        {/* @ts-expect-error React 19 asChild type mismatch */}
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg">
-                            <span className="sr-only">Abrir menú</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="rounded-xl">
-                          <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-                          <DropdownMenuItem className="rounded-lg cursor-pointer">Editar</DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem className="rounded-lg cursor-pointer text-rose-500 focus:text-rose-500 focus:bg-rose-50 dark:focus:bg-rose-950">Eliminar</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <div onClick={(e) => e.stopPropagation()} className="opacity-0 group-hover:opacity-100 transition-opacity flex justify-end">
+                        <TransactionDialog transaction={mov} accounts={accounts} categories={categories} />
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}

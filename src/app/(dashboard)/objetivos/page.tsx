@@ -43,7 +43,12 @@ export default async function ObjetivosPage() {
               <Card key={obj.id} className="bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border-white/20 dark:border-zinc-800/50 shadow-[0_4px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_40px_rgb(0,0,0,0.06)] transition-all rounded-2xl group cursor-pointer">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                   <CardTitle className="text-base">{obj.name}</CardTitle>
-                  <Target className="h-5 w-5 text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors" />
+                  <div className="flex items-center gap-2">
+                    <Target className="h-5 w-5 text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors" />
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <GoalDialog goal={obj} />
+                    </div>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <div className="text-3xl font-bold mt-2 mb-1">

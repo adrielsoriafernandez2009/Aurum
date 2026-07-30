@@ -68,9 +68,14 @@ export default async function PresupuestosPage() {
               <Card key={pres.id} className="bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border-white/20 dark:border-zinc-800/50 shadow-[0_4px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_40px_rgb(0,0,0,0.06)] transition-all rounded-2xl group cursor-pointer">
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                   <CardTitle className="text-lg">{name}</CardTitle>
-                  <span className={`text-xs font-semibold px-2 py-1 rounded-full ${isDanger ? 'bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400' : 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400'}`}>
-                    {percentage.toFixed(0)}%
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className={`text-xs font-semibold px-2 py-1 rounded-full ${isDanger ? 'bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400' : 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400'}`}>
+                      {percentage.toFixed(0)}%
+                    </span>
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <BudgetDialog budget={pres} categories={categories} />
+                    </div>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-end justify-between mb-4">
