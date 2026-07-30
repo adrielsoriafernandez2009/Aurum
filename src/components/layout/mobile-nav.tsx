@@ -61,7 +61,7 @@ export function MobileNav() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" side="top" className="w-48 mb-2 rounded-2xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-2xl border border-zinc-200/50 dark:border-zinc-800/50 shadow-2xl p-1">
             {moreLinks.map(item => (
-              <DropdownMenuItem key={item.name} asChild className="rounded-xl cursor-pointer">
+              <DropdownMenuItem key={item.name} className="rounded-xl cursor-pointer p-0">
                 <Link href={item.href} className="flex items-center w-full font-medium h-10 px-2 text-sm text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-100">
                   <item.icon className="mr-3 h-4 w-4" />
                   {item.name}
