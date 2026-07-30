@@ -28,8 +28,8 @@ export function Sidebar() {
       <div className="flex flex-col flex-grow pt-8 pb-4 overflow-y-auto">
         <div className="flex items-center flex-shrink-0 px-8">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center overflow-hidden">
-              <Image src="/logo.png" alt="Aurum" width={48} height={48} className="w-full h-full object-contain" />
+            <div className="w-16 h-16 rounded-xl flex items-center justify-center overflow-hidden">
+              <Image src="/logo.png" alt="Aurum" width={64} height={64} className="w-full h-full object-contain" />
             </div>
             <span className="text-xl font-semibold tracking-tight">Aurum</span>
           </div>
