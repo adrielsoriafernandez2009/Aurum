@@ -12,7 +12,12 @@ export const metadata: Metadata = {
   title: "Aurum - Finanzas Personales",
   description: "Plataforma premium de gestión financiera personal",
   icons: {
-    icon: '/icon.png',
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/logo.png', type: 'image/png' },
+    ],
+    shortcut: '/logo.png',
+    apple: '/logo.png',
   }
 };
 
