@@ -1,5 +1,6 @@
 import { Sidebar } from '@/components/layout/sidebar'
 import { Topbar } from '@/components/layout/topbar'
+import { MobileNav } from '@/components/layout/mobile-nav'
 
 export default function DashboardLayout({
   children,
@@ -11,12 +12,13 @@ export default function DashboardLayout({
       <Sidebar />
       <div className="lg:pl-72 flex flex-col min-h-screen">
         <Topbar />
-        <main className="flex-1">
+        <main className="flex-1 pb-20 lg:pb-0">
           <div className="p-8 max-w-7xl mx-auto">
             {children}
           </div>
         </main>
       </div>
+      <MobileNav />
     </div>
   )
 }
