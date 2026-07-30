@@ -33,10 +33,10 @@ export default function LoginPage() {
             </div>
             
             <div className="pt-2 flex flex-col gap-3">
-              <Button formAction={login} className="w-full h-11 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white shadow-md transition-all">
+              <Button type="submit" formAction={login} className="w-full h-11 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-white shadow-md transition-all">
                 Iniciar sesión
               </Button>
-              <Button formAction={signup} variant="outline" className="w-full h-11 rounded-xl border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all">
+              <Button type="submit" formAction={signup} variant="outline" className="w-full h-11 rounded-xl border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all">
                 Crear cuenta
               </Button>
             </div>
