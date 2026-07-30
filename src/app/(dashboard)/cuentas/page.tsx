@@ -58,7 +58,7 @@ export default async function CuentasPage() {
                     </div>
                   </div>
                   <div onClick={(e) => e.stopPropagation()}>
-                    <AccountDialog account={cuenta} />
+                    <AccountDialog account={JSON.parse(JSON.stringify(cuenta))} />
                   </div>
                 </CardHeader>
                 <CardContent>

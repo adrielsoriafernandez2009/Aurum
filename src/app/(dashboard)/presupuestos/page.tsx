@@ -73,7 +73,7 @@ export default async function PresupuestosPage() {
                       {percentage.toFixed(0)}%
                     </span>
                     <div onClick={(e) => e.stopPropagation()}>
-                      <BudgetDialog budget={pres} categories={categories} />
+                      <BudgetDialog budget={JSON.parse(JSON.stringify(pres))} categories={categories} />
                     </div>
                   </div>
                 </CardHeader>

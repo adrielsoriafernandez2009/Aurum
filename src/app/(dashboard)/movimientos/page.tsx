@@ -121,7 +121,7 @@ export default async function MovimientosPage() {
                     </TableCell>
                     <TableCell>
                       <div onClick={(e) => e.stopPropagation()} className="opacity-0 group-hover:opacity-100 transition-opacity flex justify-end">
-                        <TransactionDialog transaction={mov} accounts={accounts} categories={categories} />
+                        <TransactionDialog transaction={JSON.parse(JSON.stringify(mov))} accounts={accounts} categories={categories} />
                       </div>
                     </TableCell>
                   </TableRow>

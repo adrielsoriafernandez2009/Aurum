@@ -84,7 +84,7 @@ export default async function SuscripcionesPage() {
                     </div>
                   </div>
                   <div onClick={(e) => e.stopPropagation()}>
-                    <SubscriptionDialog subscription={sub} />
+                    <SubscriptionDialog subscription={JSON.parse(JSON.stringify(sub))} />
                   </div>
                 </CardHeader>
                 <CardContent>
