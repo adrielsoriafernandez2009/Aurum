@@ -24,12 +24,25 @@ import prisma from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
 
-export default async function MovimientosPage() {
+export default async function MovimientosPage({
+  searchParams,
+}: {
+  searchParams: { q?: string }
+}) {
   const workspace = await getCurrentWorkspace()
+  const query = searchParams?.q || ''
+  
+  const whereClause: any = { workspaceId: workspace.id }
+  if (query) {
+    whereClause.OR = [
+      { description: { contains: query, mode: 'insensitive' } }
+      // Category name search requires more complex relation filtering but description is usually enough
+    ]
+  }
   
   const [movimientos, accounts, categories] = await Promise.all([
     prisma.transaction.findMany({
-      where: { workspaceId: workspace.id },
+      where: whereClause,
       orderBy: { date: 'desc' },
       include: {
         account: true,
@@ -58,13 +71,15 @@ export default async function MovimientosPage() {
 
       <Card className="bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border-white/20 dark:border-zinc-800/50 shadow-sm overflow-hidden rounded-2xl">
         <div className="p-4 border-b border-zinc-200/50 dark:border-zinc-800/50 flex flex-col sm:flex-row gap-4 items-center justify-between">
-          <div className="relative w-full sm:w-96">
+          <form action="/movimientos" method="GET" className="relative w-full sm:w-96">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
             <Input 
+              name="q"
+              defaultValue={query}
               placeholder="Buscar por nombre, categoría o cantidad..." 
               className="pl-10 rounded-xl bg-white/50 dark:bg-zinc-950/50 border-zinc-200 dark:border-zinc-800 h-8 text-sm"
             />
-          </div>
+          </form>
           <div className="flex items-center gap-2 w-full sm:w-auto">
             <Button variant="outline" size="sm" className="rounded-xl h-10 bg-white/50 dark:bg-zinc-900/50 hover:bg-white dark:hover:bg-zinc-900 transition-all">
               <Filter className="mr-2 h-4 w-4" />
