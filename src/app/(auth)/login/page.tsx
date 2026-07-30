@@ -2,7 +2,7 @@ import { login, signup } from './actions'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Wallet } from 'lucide-react'
+import Image from 'next/image'
 
 export default async function LoginPage({
   searchParams,
@@ -21,8 +21,8 @@ export default async function LoginPage({
 
       <div className="w-full max-w-md z-10">
         <div className="flex flex-col items-center mb-8">
-          <div className="w-12 h-12 bg-zinc-900 dark:bg-white rounded-2xl flex items-center justify-center mb-4 shadow-xl">
-            <Wallet className="w-6 h-6 text-white dark:text-zinc-900" />
+          <div className="w-24 h-24 mb-4">
+            <Image src="/logo.png" alt="Aurum Logo" width={96} height={96} className="w-full h-full object-contain" priority />
           </div>
           <h1 className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">Bienvenido a Aurum</h1>
           <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-2">Gestiona tus finanzas como un profesional</p>

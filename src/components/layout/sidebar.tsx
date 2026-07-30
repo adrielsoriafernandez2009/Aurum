@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import {
   LayoutDashboard,
   WalletCards,
@@ -27,8 +28,8 @@ export function Sidebar() {
       <div className="flex flex-col flex-grow pt-8 pb-4 overflow-y-auto">
         <div className="flex items-center flex-shrink-0 px-8">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-zinc-900 dark:bg-white rounded-xl flex items-center justify-center shadow-md">
-              <span className="text-white dark:text-zinc-900 font-bold text-lg">A</span>
+            <div className="w-8 h-8 rounded-xl flex items-center justify-center overflow-hidden">
+              <Image src="/logo.png" alt="Aurum" width={32} height={32} className="w-full h-full object-contain" />
             </div>
             <span className="text-xl font-semibold tracking-tight">Aurum</span>
           </div>
