@@ -4,7 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 export function Topbar() {
   return (
-    <div className="sticky top-0 z-40 flex h-20 shrink-0 items-center gap-x-6 bg-white/60 dark:bg-zinc-950/60 backdrop-blur-xl border-b border-zinc-200/50 dark:border-zinc-800/50 px-4 sm:px-6 lg:px-8 shadow-[0_4px_30px_rgb(0,0,0,0.02)]">
+    <div className="sticky top-0 z-40 flex h-12 shrink-0 items-center gap-x-6 bg-white/60 dark:bg-zinc-950/60 backdrop-blur-xl border-b border-zinc-200/50 dark:border-zinc-800/50 px-4 sm:px-6 lg:px-8 shadow-[0_4px_30px_rgb(0,0,0,0.02)]">
       <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
         <form className="relative flex flex-1" action="#" method="GET">
           <label htmlFor="search-field" className="sr-only">
