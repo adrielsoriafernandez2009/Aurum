@@ -10,18 +10,18 @@ export default async function SuscripcionesPage() {
   try {
     const workspace = await getCurrentWorkspace()
     
-    const suscripciones = await prisma.subscription.findMany({
-      where: { workspaceId: workspace.id },
-      orderBy: { nextBilling: 'asc' }
-    })
-
-    const accounts = await prisma.account.findMany({
-      where: { workspaceId: workspace.id }
-    })
-
-    const categories = await prisma.category.findMany({
-      where: { workspaceId: workspace.id }
-    })
+    const [suscripciones, accounts, categories] = await Promise.all([
+      prisma.subscription.findMany({
+        where: { workspaceId: workspace.id },
+        orderBy: { nextBilling: 'asc' }
+      }),
+      prisma.account.findMany({
+        where: { workspaceId: workspace.id }
+      }),
+      prisma.category.findMany({
+        where: { workspaceId: workspace.id }
+      })
+    ])
 
     // Calculate totals
     const totalMensual = suscripciones.reduce((sum, sub) => {

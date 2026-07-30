@@ -27,17 +27,18 @@ export const dynamic = 'force-dynamic'
 export default async function MovimientosPage() {
   const workspace = await getCurrentWorkspace()
   
-  const movimientos = await prisma.transaction.findMany({
-    where: { workspaceId: workspace.id },
-    orderBy: { date: 'desc' },
-    include: {
-      account: true,
-      category: true
-    }
-  })
-
-  const accounts = await prisma.account.findMany({ where: { workspaceId: workspace.id } })
-  const categories = await prisma.category.findMany({ where: { workspaceId: workspace.id } })
+  const [movimientos, accounts, categories] = await Promise.all([
+    prisma.transaction.findMany({
+      where: { workspaceId: workspace.id },
+      orderBy: { date: 'desc' },
+      include: {
+        account: true,
+        category: true
+      }
+    }),
+    prisma.account.findMany({ where: { workspaceId: workspace.id } }),
+    prisma.category.findMany({ where: { workspaceId: workspace.id } })
+  ])
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">

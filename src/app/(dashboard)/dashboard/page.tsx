@@ -9,28 +9,26 @@ export const dynamic = 'force-dynamic'
 export default async function DashboardPage() {
   const workspace = await getCurrentWorkspace()
 
-  const accounts = await prisma.account.findMany({ where: { workspaceId: workspace.id } })
-  
   const now = new Date()
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
 
-  // Get goals
-  const objetivos = await prisma.goal.findMany({
-    where: { workspaceId: workspace.id },
-    orderBy: { createdAt: 'desc' },
-    take: 3
-  })
-
-  const transactions = await prisma.transaction.findMany({
-    where: { workspaceId: workspace.id },
-    orderBy: { date: 'desc' },
-    take: 5,
-    include: { category: true }
-  })
-
-  const monthlyTransactions = await prisma.transaction.findMany({
-    where: { workspaceId: workspace.id, date: { gte: startOfMonth } }
-  })
+  const [accounts, objetivos, transactions, monthlyTransactions] = await Promise.all([
+    prisma.account.findMany({ where: { workspaceId: workspace.id } }),
+    prisma.goal.findMany({
+      where: { workspaceId: workspace.id },
+      orderBy: { createdAt: 'desc' },
+      take: 3
+    }),
+    prisma.transaction.findMany({
+      where: { workspaceId: workspace.id },
+      orderBy: { date: 'desc' },
+      take: 5,
+      include: { category: true }
+    }),
+    prisma.transaction.findMany({
+      where: { workspaceId: workspace.id, date: { gte: startOfMonth } }
+    })
+  ])
 
   const totalBalance = accounts.reduce((sum, acc) => sum + acc.balance, 0)
   

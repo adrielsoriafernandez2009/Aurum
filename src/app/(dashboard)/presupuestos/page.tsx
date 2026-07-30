@@ -10,25 +10,24 @@ export const dynamic = 'force-dynamic'
 export default async function PresupuestosPage() {
   const workspace = await getCurrentWorkspace()
 
-  // Get budgets with their category
-  const budgets = await prisma.budget.findMany({
-    where: { workspaceId: workspace.id },
-    include: { category: true }
-  })
-
-  // Get transactions for the current month to calculate spent amount
+  // Get budgets with their category, transactions, and categories in parallel
   const now = new Date()
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
-  
-  const monthlyTransactions = await prisma.transaction.findMany({
-    where: { 
-      workspaceId: workspace.id,
-      date: { gte: startOfMonth },
-      type: 'EXPENSE'
-    }
-  })
 
-  const categories = await prisma.category.findMany({ where: { workspaceId: workspace.id } })
+  const [budgets, monthlyTransactions, categories] = await Promise.all([
+    prisma.budget.findMany({
+      where: { workspaceId: workspace.id },
+      include: { category: true }
+    }),
+    prisma.transaction.findMany({
+      where: { 
+        workspaceId: workspace.id,
+        date: { gte: startOfMonth },
+        type: 'EXPENSE'
+      }
+    }),
+    prisma.category.findMany({ where: { workspaceId: workspace.id } })
+  ])
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
