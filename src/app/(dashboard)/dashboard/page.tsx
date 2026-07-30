@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ArrowDownIcon, ArrowUpIcon, Wallet, PiggyBank, Target, CalendarClock, TrendingUp } from 'lucide-react'
+import Link from 'next/link'
 import { getCurrentWorkspace } from '@/lib/data'
 import prisma from '@/lib/prisma'
 
