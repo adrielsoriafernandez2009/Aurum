@@ -284,10 +284,14 @@ export async function createSubscription(formData: FormData) {
   const frequency = formData.get('frequency') as string || 'MONTHLY'
   const nextBillingStr = formData.get('nextBilling') as string
   const nextBilling = nextBillingStr ? new Date(nextBillingStr) : new Date()
+  const accountId = formData.get('accountId') as string || null
+  const categoryId = formData.get('categoryId') as string || null
 
   await prisma.subscription.create({
     data: {
       workspaceId: workspace.id,
+      accountId,
+      categoryId,
       name,
       price,
       frequency,
@@ -306,10 +310,12 @@ export async function updateSubscription(id: string, formData: FormData) {
   const frequency = formData.get('frequency') as string || 'MONTHLY'
   const nextBillingStr = formData.get('nextBilling') as string
   const nextBilling = nextBillingStr ? new Date(nextBillingStr) : new Date()
+  const accountId = formData.get('accountId') as string || null
+  const categoryId = formData.get('categoryId') as string || null
 
   await prisma.subscription.update({
     where: { id, workspaceId: workspace.id },
-    data: { name, price, frequency, nextBilling }
+    data: { name, price, frequency, nextBilling, accountId, categoryId }
   })
   revalidatePath('/suscripciones')
 }

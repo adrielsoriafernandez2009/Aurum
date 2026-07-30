@@ -1,6 +1,7 @@
 import { Target, FileText } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { GoalDialog } from '@/components/forms/goal-dialog'
+import { AddFundsDialog } from '@/components/forms/add-funds-dialog'
 import { getCurrentWorkspace } from '@/lib/data'
 import prisma from '@/lib/prisma'
 
@@ -68,6 +69,7 @@ export default async function ObjetivosPage() {
                         <span>€{Math.max(0, obj.targetAmount - obj.savedAmount).toLocaleString()} restantes</span>
                       </div>
                     </div>
+                    <AddFundsDialog goal={JSON.parse(JSON.stringify(obj))} />
                   </CardContent>
                 </Card>
               )

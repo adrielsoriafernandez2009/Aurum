@@ -15,6 +15,14 @@ export default async function SuscripcionesPage() {
       orderBy: { nextBilling: 'asc' }
     })
 
+    const accounts = await prisma.account.findMany({
+      where: { workspaceId: workspace.id }
+    })
+
+    const categories = await prisma.category.findMany({
+      where: { workspaceId: workspace.id }
+    })
+
     // Calculate totals
     const totalMensual = suscripciones.reduce((sum, sub) => {
       return sum + (sub.frequency === 'MONTHLY' ? sub.price : sub.price / 12)
@@ -31,7 +39,7 @@ export default async function SuscripcionesPage() {
             <h2 className="text-2xl font-bold tracking-tight">Suscripciones</h2>
             <p className="text-muted-foreground mt-1">Controla tus pagos recurrentes.</p>
           </div>
-          <SubscriptionDialog />
+          <SubscriptionDialog accounts={accounts} categories={categories} />
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 mb-8">
@@ -85,7 +93,7 @@ export default async function SuscripcionesPage() {
                       </div>
                     </div>
                     <div>
-                      <SubscriptionDialog subscription={JSON.parse(JSON.stringify(sub))} />
+                      <SubscriptionDialog subscription={JSON.parse(JSON.stringify(sub))} accounts={accounts} categories={categories} />
                     </div>
                   </CardHeader>
                   <CardContent>

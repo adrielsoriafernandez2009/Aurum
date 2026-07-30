@@ -62,6 +62,21 @@ export async function GET() {
       await prisma.$executeRawUnsafe(`ALTER TABLE "RecurringExpense" ADD CONSTRAINT "RecurringExpense_workspaceId_fkey" FOREIGN KEY ("workspaceId") REFERENCES "Workspace"("id") ON DELETE CASCADE ON UPDATE CASCADE;`);
     } catch(e) {}
 
+    // Nuevas columnas para Subscription v18
+    try {
+      await prisma.$executeRawUnsafe(`ALTER TABLE "Subscription" ADD COLUMN "accountId" TEXT;`);
+    } catch(e) {}
+    try {
+      await prisma.$executeRawUnsafe(`ALTER TABLE "Subscription" ADD COLUMN "categoryId" TEXT;`);
+    } catch(e) {}
+    
+    try {
+      await prisma.$executeRawUnsafe(`ALTER TABLE "Subscription" ADD CONSTRAINT "Subscription_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "Account"("id") ON DELETE SET NULL ON UPDATE CASCADE;`);
+    } catch(e) {}
+    try {
+      await prisma.$executeRawUnsafe(`ALTER TABLE "Subscription" ADD CONSTRAINT "Subscription_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Category"("id") ON DELETE SET NULL ON UPDATE CASCADE;`);
+    } catch(e) {}
+
     return NextResponse.json({ success: true, message: "Tablas creadas correctamente en la base de datos de producción." })
   } catch (error: any) {
     return NextResponse.json({ success: false, error: error.message })

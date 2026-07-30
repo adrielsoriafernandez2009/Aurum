@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { createSubscription, updateSubscription, deleteSubscription } from '@/app/(dashboard)/actions'
 
-export function SubscriptionDialog({ subscription }: { subscription?: any }) {
+export function SubscriptionDialog({ subscription, accounts = [], categories = [] }: { subscription?: any, accounts?: any[], categories?: any[] }) {
   const [open, setOpen] = useState(false)
   const isEdit = !!subscription
 
@@ -99,6 +99,28 @@ export function SubscriptionDialog({ subscription }: { subscription?: any }) {
             <div className="space-y-2">
               <Label htmlFor="nextBilling">Próximo Cobro</Label>
               <Input id="nextBilling" name="nextBilling" type="date" required defaultValue={subscription?.nextBilling ? new Date(subscription.nextBilling).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]} className="rounded-xl" />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="accountId">Cuenta de cobro</Label>
+                <select id="accountId" name="accountId" required defaultValue={subscription?.accountId || ""} className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                  <option value="" disabled>Selecciona cuenta</option>
+                  {accounts.map(acc => (
+                    <option key={acc.id} value={acc.id}>{acc.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="categoryId">Categoría</Label>
+                <select id="categoryId" name="categoryId" required defaultValue={subscription?.categoryId || ""} className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                  <option value="" disabled>Selecciona categoría</option>
+                  {categories.filter(c => c.type === 'EXPENSE').map(cat => (
+                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             <div className="pt-4 flex justify-end gap-3">
