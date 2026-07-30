@@ -53,10 +53,8 @@ export function AccountDialog({ account }: { account?: any }) {
           </DialogTrigger>
         ) : (
           <DropdownMenu>
-            <DropdownMenuTrigger {...({ asChild: true } as any)}>
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-zinc-500 hover:text-zinc-900 dark:hover:text-white absolute top-4 right-4">
-                <MoreVertical className="h-4 w-4" />
-              </Button>
+            <DropdownMenuTrigger className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-md text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-white transition-colors">
+              <MoreVertical className="h-4 w-4" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="rounded-xl">
               <DialogTrigger {...({ asChild: true } as any)}>

@@ -22,21 +22,6 @@ export function Topbar() {
             name="search"
           />
         </form>
-        <div className="flex items-center gap-x-4 lg:gap-x-6">
-          <button type="button" className="-m-2.5 p-2.5 text-zinc-400 hover:text-zinc-500 transition-colors">
-            <span className="sr-only">Ver notificaciones</span>
-            <Bell className="h-5 w-5" aria-hidden="true" />
-          </button>
-
-          <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-zinc-200 dark:lg:bg-zinc-800" aria-hidden="true" />
-
-          <div className="flex items-center gap-x-4">
-            <Avatar className="h-9 w-9 cursor-pointer ring-2 ring-transparent hover:ring-zinc-200 dark:hover:ring-zinc-800 transition-all shadow-sm">
-              <AvatarImage src="https://github.com/shadcn.png" alt="@usuario" />
-              <AvatarFallback>U</AvatarFallback>
-            </Avatar>
-          </div>
-        </div>
       </div>
     </div>
   )
