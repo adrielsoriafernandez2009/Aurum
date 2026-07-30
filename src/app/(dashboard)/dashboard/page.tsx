@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { ArrowDownIcon, ArrowUpIcon, Wallet, PiggyBank, Target, CalendarClock, TrendingUp } from 'lucide-react'
+import { ArrowDownIcon, ArrowUpIcon, Wallet, PiggyBank, Target, CalendarClock, TrendingUp, CheckCircle2 } from 'lucide-react'
 import Link from 'next/link'
 import { getCurrentWorkspace } from '@/lib/data'
 import prisma from '@/lib/prisma'
@@ -170,14 +170,20 @@ export default async function DashboardPage() {
                   <div className="space-y-4">
                     {objetivos.map(obj => {
                       const percent = obj.targetAmount > 0 ? (obj.savedAmount / obj.targetAmount) * 100 : 0
+                      const isCompleted = percent >= 100
                       return (
                         <div key={obj.id} className="space-y-2">
                           <div className="flex justify-between text-sm font-medium">
-                            <span>{obj.name}</span>
-                            <span>{new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(obj.savedAmount)} / {new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(obj.targetAmount)}</span>
+                            <span className="flex items-center gap-1.5">
+                              {obj.name}
+                              {isCompleted && <CheckCircle2 className="h-4 w-4 text-emerald-500" />}
+                            </span>
+                            <span className={isCompleted ? "text-emerald-600 dark:text-emerald-400 font-bold" : ""}>
+                              {isCompleted ? "¡Completado!" : `${new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(obj.savedAmount)} / ${new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(obj.targetAmount)}`}
+                            </span>
                           </div>
                           <div className="h-2 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
-                            <div className="h-full bg-blue-500 transition-all duration-1000" style={{ width: `${Math.max(0, Math.min(100, percent))}%` }} />
+                            <div className={`h-full transition-all duration-1000 ${isCompleted ? 'bg-emerald-500' : 'bg-blue-500'}`} style={{ width: `${Math.max(0, Math.min(100, percent))}%` }} />
                           </div>
                         </div>
                       )

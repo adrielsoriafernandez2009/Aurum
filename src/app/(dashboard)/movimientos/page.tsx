@@ -62,7 +62,7 @@ export default async function MovimientosPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
             <Input 
               placeholder="Buscar por nombre, categoría o cantidad..." 
-              className="pl-10 rounded-xl bg-white/50 dark:bg-zinc-950/50 border-zinc-200 dark:border-zinc-800 h-10"
+              className="pl-10 rounded-xl bg-white/50 dark:bg-zinc-950/50 border-zinc-200 dark:border-zinc-800 h-8 text-sm"
             />
           </div>
           <div className="flex items-center gap-2 w-full sm:w-auto">
