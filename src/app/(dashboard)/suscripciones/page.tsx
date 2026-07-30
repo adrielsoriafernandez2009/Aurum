@@ -84,7 +84,7 @@ export default async function SuscripcionesPage() {
                         <p className="text-xs text-muted-foreground">{sub.frequency === 'MONTHLY' ? 'Mensual' : 'Anual'}</p>
                       </div>
                     </div>
-                    <div onClick={(e) => e.stopPropagation()}>
+                    <div>
                       <SubscriptionDialog subscription={JSON.parse(JSON.stringify(sub))} />
                     </div>
                   </CardHeader>

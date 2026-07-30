@@ -120,7 +120,7 @@ export default async function MovimientosPage() {
                       {mov.type === 'EXPENSE' ? '-' : '+'}{new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(mov.amount)}
                     </TableCell>
                     <TableCell>
-                      <div onClick={(e) => e.stopPropagation()} className="opacity-0 group-hover:opacity-100 transition-opacity flex justify-end">
+                      <div className="opacity-0 group-hover:opacity-100 transition-opacity flex justify-end">
                         <TransactionDialog transaction={JSON.parse(JSON.stringify(mov))} accounts={JSON.parse(JSON.stringify(accounts))} categories={JSON.parse(JSON.stringify(categories))} />
                       </div>
                     </TableCell>

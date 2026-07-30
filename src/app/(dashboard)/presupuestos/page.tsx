@@ -72,7 +72,7 @@ export default async function PresupuestosPage() {
                     <span className={`text-xs font-semibold px-2 py-1 rounded-full ${isDanger ? 'bg-rose-100 text-rose-600 dark:bg-rose-900/30 dark:text-rose-400' : 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400'}`}>
                       {percentage.toFixed(0)}%
                     </span>
-                    <div onClick={(e) => e.stopPropagation()}>
+                    <div>
                       <BudgetDialog budget={JSON.parse(JSON.stringify(pres))} categories={JSON.parse(JSON.stringify(categories))} />
                     </div>
                   </div>

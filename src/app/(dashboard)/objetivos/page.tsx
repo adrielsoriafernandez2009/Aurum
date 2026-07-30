@@ -46,7 +46,7 @@ export default async function ObjetivosPage() {
                     <CardTitle className="text-base">{obj.name}</CardTitle>
                     <div className="flex items-center gap-2">
                       <Target className="h-5 w-5 text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors" />
-                      <div onClick={(e) => e.stopPropagation()}>
+                      <div>
                         <GoalDialog goal={JSON.parse(JSON.stringify(obj))} />
                       </div>
                     </div>

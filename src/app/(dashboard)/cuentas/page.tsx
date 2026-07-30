@@ -57,7 +57,7 @@ export default async function CuentasPage() {
                       <p className="text-xs text-muted-foreground">{cuenta.type}</p>
                     </div>
                   </div>
-                  <div onClick={(e) => e.stopPropagation()}>
+                  <div>
                     <AccountDialog account={JSON.parse(JSON.stringify(cuenta))} />
                   </div>
                 </CardHeader>
