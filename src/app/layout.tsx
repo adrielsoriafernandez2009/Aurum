@@ -11,6 +11,9 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Aurum - Finanzas Personales",
   description: "Plataforma premium de gestión financiera personal",
+  icons: {
+    icon: '/icon.png',
+  }
 };
 
 export default function RootLayout({
