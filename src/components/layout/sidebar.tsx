@@ -17,7 +17,6 @@ const navigation = [
   { name: 'Presupuestos', href: '/presupuestos', icon: PieChart },
   { name: 'Objetivos', href: '/objetivos', icon: Target },
   { name: 'Estadísticas', href: '/estadisticas', icon: BarChart3 },
-  { name: 'Recurrentes', href: '/recurrentes', icon: CalendarClock },
   { name: 'Suscripciones', href: '/suscripciones', icon: CreditCard },
   { name: 'Cuentas', href: '/cuentas', icon: Building2 },
 ]

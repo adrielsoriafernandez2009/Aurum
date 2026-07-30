@@ -44,6 +44,8 @@ export default async function DashboardPage() {
   const savingsMonth = incomeMonth - expenseMonth
   const savingsRate = incomeMonth > 0 ? (savingsMonth / incomeMonth) * 100 : 0
 
+  const cashBalance = accounts.filter(acc => acc.type === 'CASH').reduce((sum, acc) => sum + acc.balance, 0)
+
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out">
       <div>
@@ -51,7 +53,7 @@ export default async function DashboardPage() {
         <p className="text-muted-foreground mt-1">Aquí tienes el estado de tus finanzas este mes.</p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
         {/* Patrimonio */}
         <Card className="bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border-white/20 dark:border-zinc-800/50 shadow-[0_4px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_40px_rgb(0,0,0,0.06)] transition-all">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -65,6 +67,19 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
         
+        {/* Efectivo */}
+        <Card className="bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border-white/20 dark:border-zinc-800/50 shadow-[0_4px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_40px_rgb(0,0,0,0.06)] transition-all">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Efectivo Disponible</CardTitle>
+            <Wallet className="h-4 w-4 text-emerald-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-emerald-500">
+              {new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(cashBalance)}
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Ingresos */}
         <Card className="bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border-white/20 dark:border-zinc-800/50 shadow-[0_4px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_40px_rgb(0,0,0,0.06)] transition-all">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -104,7 +119,7 @@ export default async function DashboardPage() {
             <div className="mt-3 h-2 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
               <div className="h-full bg-blue-500 transition-all duration-1000" style={{ width: `${Math.max(0, Math.min(100, savingsRate))}%` }} />
             </div>
-            <p className="text-xs text-zinc-500 mt-2">{savingsRate.toFixed(1)}% de los ingresos</p>
+            <p className="text-xs text-zinc-500 mt-2">{savingsRate.toFixed(1)}% de ingresos</p>
           </CardContent>
         </Card>
       </div>
@@ -139,7 +154,7 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
 
-        {/* Objetivos y Recurrentes vacíos temporalmente */}
+        {/* Objetivos */}
         <div className="lg:col-span-3 space-y-6">
           <Card className="bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border-white/20 dark:border-zinc-800/50 shadow-sm">
             <CardHeader className="flex flex-row items-center justify-between pb-4">
@@ -147,17 +162,26 @@ export default async function DashboardPage() {
               <Target className="h-4 w-4 text-zinc-500" />
             </CardHeader>
             <CardContent>
-              <div className="text-center py-6 text-zinc-500 text-sm">Sin objetivos activos.</div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border-white/20 dark:border-zinc-800/50 shadow-sm">
-            <CardHeader className="flex flex-row items-center justify-between pb-4">
-              <CardTitle>Próximos Recurrentes</CardTitle>
-              <CalendarClock className="h-4 w-4 text-zinc-500" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-6 text-zinc-500 text-sm">No hay gastos recurrentes configurados.</div>
+              {objetivos.length === 0 ? (
+                <div className="text-center py-6 text-zinc-500 text-sm">Sin objetivos activos.</div>
+              ) : (
+                <div className="space-y-4">
+                  {objetivos.map(obj => {
+                    const percent = obj.targetAmount > 0 ? (obj.savedAmount / obj.targetAmount) * 100 : 0
+                    return (
+                      <div key={obj.id} className="space-y-2">
+                        <div className="flex justify-between text-sm font-medium">
+                          <span>{obj.name}</span>
+                          <span>{new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(obj.savedAmount)} / {new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(obj.targetAmount)}</span>
+                        </div>
+                        <div className="h-2 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
+                          <div className="h-full bg-blue-500 transition-all duration-1000" style={{ width: `${Math.max(0, Math.min(100, percent))}%` }} />
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
