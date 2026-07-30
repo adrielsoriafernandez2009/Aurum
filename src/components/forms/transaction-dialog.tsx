@@ -23,6 +23,7 @@ import { createTransaction, updateTransaction, deleteTransaction } from '@/app/(
 
 export function TransactionDialog({ transaction, accounts, categories }: { transaction?: any, accounts: any[], categories: any[] }) {
   const [open, setOpen] = useState(false)
+  const [type, setType] = useState<'INCOME'|'EXPENSE'|'TRANSFER'>(transaction?.type || 'EXPENSE')
   
   const isEdit = !!transaction
 
