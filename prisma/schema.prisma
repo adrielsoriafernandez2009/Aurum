@@ -1,0 +1,164 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String?
+  avatarUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  workspaces WorkspaceUser[]
+}
+
+model Workspace {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users              WorkspaceUser[]
+  accounts           Account[]
+  categories         Category[]
+  transactions       Transaction[]
+  budgets            Budget[]
+  goals              Goal[]
+  recurringExpenses  RecurringExpense[]
+  subscriptions      Subscription[]
+  activityLogs       ActivityLog[]
+}
+
+model WorkspaceUser {
+  id          String   @id @default(uuid())
+  userId      String
+  workspaceId String
+  role        String   @default("MEMBER") // OWNER, MEMBER
+  createdAt   DateTime @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, workspaceId])
+}
+
+model Account {
+  id          String   @id @default(uuid())
+  workspaceId String
+  name        String
+  type        String   // BANK, CREDIT_CARD, CASH, SAVINGS
+  balance     Float    @default(0)
+  currency    String   @default("EUR")
+  icon        String?
+  color       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace    Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+}
+
+model Category {
+  id          String   @id @default(uuid())
+  workspaceId String
+  name        String
+  type        String   // INCOME, EXPENSE
+  icon        String?
+  color       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace    Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+  budgets      Budget[]
+}
+
+model Transaction {
+  id          String   @id @default(uuid())
+  workspaceId String
+  accountId   String
+  categoryId  String?
+  type        String   // INCOME, EXPENSE, TRANSFER
+  amount      Float
+  date        DateTime
+  description String?
+  tags        String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  account   Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  category  Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+}
+
+model Budget {
+  id          String   @id @default(uuid())
+  workspaceId String
+  categoryId  String?  // Null means total monthly budget
+  amount      Float
+  period      String   @default("MONTHLY") // MONTHLY, YEARLY
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  category  Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+}
+
+model Goal {
+  id           String    @id @default(uuid())
+  workspaceId  String
+  name         String
+  targetAmount Float
+  savedAmount  Float     @default(0)
+  deadline     DateTime?
+  status       String    @default("ACTIVE") // ACTIVE, COMPLETED, CANCELLED
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model RecurringExpense {
+  id          String   @id @default(uuid())
+  workspaceId String
+  name        String
+  amount      Float
+  frequency   String   // WEEKLY, MONTHLY, QUARTERLY, YEARLY
+  nextDueDate DateTime
+  status      String   @default("ACTIVE") // ACTIVE, PAUSED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model Subscription {
+  id          String   @id @default(uuid())
+  workspaceId String
+  name        String
+  price       Float
+  frequency   String   // MONTHLY, YEARLY
+  nextBilling DateTime
+  status      String   @default("ACTIVE") // ACTIVE, CANCELLED
+  url         String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
+
+model ActivityLog {
+  id          String   @id @default(uuid())
+  workspaceId String
+  userId      String?
+  action      String
+  details     String?
+  createdAt   DateTime @default(now())
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
