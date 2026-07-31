@@ -52,9 +52,9 @@ export default async function DashboardPage() {
         <p className="text-muted-foreground mt-1">Aquí tienes el estado de tus finanzas este mes.</p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
+      <div className="grid grid-cols-2 gap-4 md:gap-6 lg:grid-cols-5">
         {/* Patrimonio */}
-        <Card className="bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border-white/20 dark:border-zinc-800/50 shadow-[0_4px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_40px_rgb(0,0,0,0.06)] transition-all">
+        <Card className="col-span-2 lg:col-span-1 bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border-white/20 dark:border-zinc-800/50 shadow-[0_4px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_40px_rgb(0,0,0,0.06)] transition-all">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Patrimonio Total</CardTitle>
             <Wallet className="h-4 w-4 text-zinc-500" />
@@ -67,7 +67,7 @@ export default async function DashboardPage() {
         </Card>
         
         {/* Efectivo */}
-        <Card className="bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border-white/20 dark:border-zinc-800/50 shadow-[0_4px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_40px_rgb(0,0,0,0.06)] transition-all">
+        <Card className="col-span-2 lg:col-span-1 bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border-white/20 dark:border-zinc-800/50 shadow-[0_4px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_40px_rgb(0,0,0,0.06)] transition-all">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Efectivo Disponible</CardTitle>
             <Wallet className="h-4 w-4 text-emerald-500" />
@@ -80,33 +80,33 @@ export default async function DashboardPage() {
         </Card>
 
         {/* Ingresos */}
-        <Card className="bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border-white/20 dark:border-zinc-800/50 shadow-[0_4px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_40px_rgb(0,0,0,0.06)] transition-all">
+        <Card className="col-span-1 flex flex-col justify-center aspect-square bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border-white/20 dark:border-zinc-800/50 shadow-[0_4px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_40px_rgb(0,0,0,0.06)] transition-all">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Ingresos (Mes)</CardTitle>
+            <CardTitle className="text-xs sm:text-sm font-medium">Ingresos</CardTitle>
             <TrendingUp className="h-4 w-4 text-emerald-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-emerald-500">
-              {new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(incomeMonth)}
+            <div className="text-xl sm:text-2xl font-bold text-emerald-500 truncate">
+              {new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(incomeMonth)}
             </div>
           </CardContent>
         </Card>
 
         {/* Gastos */}
-        <Card className="bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border-white/20 dark:border-zinc-800/50 shadow-[0_4px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_40px_rgb(0,0,0,0.06)] transition-all">
+        <Card className="col-span-1 flex flex-col justify-center aspect-square bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border-white/20 dark:border-zinc-800/50 shadow-[0_4px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_40px_rgb(0,0,0,0.06)] transition-all">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Gastos (Mes)</CardTitle>
+            <CardTitle className="text-xs sm:text-sm font-medium">Gastos</CardTitle>
             <ArrowDownIcon className="h-4 w-4 text-rose-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-rose-500">
-              {new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(expenseMonth)}
+            <div className="text-xl sm:text-2xl font-bold text-rose-500 truncate">
+              {new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(expenseMonth)}
             </div>
           </CardContent>
         </Card>
 
         {/* Ahorro */}
-        <Card className="bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border-white/20 dark:border-zinc-800/50 shadow-[0_4px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_40px_rgb(0,0,0,0.06)] transition-all">
+        <Card className="col-span-2 lg:col-span-1 bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border-white/20 dark:border-zinc-800/50 shadow-[0_4px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_40px_rgb(0,0,0,0.06)] transition-all">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Ahorro (Mes)</CardTitle>
             <PiggyBank className="h-4 w-4 text-blue-500" />
