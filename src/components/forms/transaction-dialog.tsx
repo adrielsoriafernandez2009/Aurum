@@ -66,7 +66,7 @@ export function TransactionDialog({
       <Dialog open={open} onOpenChange={setOpen}>
         {!isEdit ? (
           trigger ? (
-            <DialogTrigger asChild>
+            <DialogTrigger {...({ asChild: true } as any)}>
               {trigger}
             </DialogTrigger>
           ) : (
