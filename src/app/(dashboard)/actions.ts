@@ -327,3 +327,64 @@ export async function deleteSubscription(id: string) {
   })
   revalidatePath('/suscripciones')
 }
+
+// --- USER & WORKSPACE CONFIGURATION ---
+export async function updateProfile(formData: FormData) {
+  const { getCurrentUser } = await import('@/lib/data')
+  const user = await getCurrentUser()
+  const name = formData.get('name') as string
+
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { name }
+  })
+  revalidatePath('/configuracion')
+}
+
+export async function inviteToWorkspace(formData: FormData) {
+  const workspace = await getCurrentWorkspace()
+  const email = formData.get('email') as string
+
+  const targetUser = await prisma.user.findUnique({
+    where: { email }
+  })
+
+  if (!targetUser) {
+    throw new Error('USER_NOT_FOUND')
+  }
+
+  // Check if they are already in the workspace
+  const existingLink = await prisma.workspaceUser.findUnique({
+    where: { userId_workspaceId: { userId: targetUser.id, workspaceId: workspace.id } }
+  })
+
+  if (existingLink) {
+    throw new Error('ALREADY_MEMBER')
+  }
+
+  await prisma.workspaceUser.create({
+    data: {
+      userId: targetUser.id,
+      workspaceId: workspace.id,
+      role: 'MEMBER'
+    }
+  })
+  
+  revalidatePath('/configuracion')
+}
+
+export async function removeUserFromWorkspace(userId: string) {
+  const workspace = await getCurrentWorkspace()
+  const { getCurrentUser } = await import('@/lib/data')
+  const me = await getCurrentUser()
+  
+  if (me.id === userId) {
+    throw new Error('CANNOT_REMOVE_SELF')
+  }
+  
+  await prisma.workspaceUser.delete({
+    where: { userId_workspaceId: { userId, workspaceId: workspace.id } }
+  })
+  
+  revalidatePath('/configuracion')
+}
