@@ -11,7 +11,8 @@ import {
   PieChart,
   Target,
   CreditCard,
-  Settings
+  Settings,
+  Scan
 } from 'lucide-react'
 import {
   DropdownMenu,
@@ -19,9 +20,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { ScannerButton } from '@/components/forms/scanner-button'
+import { TransactionDialog } from '@/components/forms/transaction-dialog'
+import { ScannedData } from '@/lib/scanner'
 
-export function MobileNav() {
+export function MobileNav({ accounts = [], categories = [] }: { accounts?: any[], categories?: any[] }) {
   const pathname = usePathname()
+  const [scanData, setScanData] = useState<ScannedData | null>(null)
+  const [dialogOpen, setDialogOpen] = useState(false)
   
   const mainLinks = [
     { name: 'Inicio', href: '/dashboard', icon: LayoutDashboard },
@@ -37,9 +43,29 @@ export function MobileNav() {
     { name: 'Configuración', href: '/configuracion', icon: Settings },
   ]
 
+  const handleScanComplete = (data: ScannedData) => {
+    setScanData(data)
+    setDialogOpen(true)
+  }
+
   return (
-    <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-xl border-t border-zinc-200/50 dark:border-zinc-800/50 shadow-[0_-4px_30px_rgb(0,0,0,0.05)]" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
-      <div className="flex items-center justify-around h-16 px-1">
+    <>
+      {/* Invisible dialog that opens when scan completes */}
+      <TransactionDialog 
+        accounts={accounts} 
+        categories={categories} 
+        open={dialogOpen} 
+        onOpenChange={setDialogOpen}
+        prefillData={{
+          amount: scanData?.amount,
+          description: scanData?.merchant,
+          date: scanData?.date
+        }}
+        trigger={<div className="hidden" />}
+      />
+
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-xl border-t border-zinc-200/50 dark:border-zinc-800/50 shadow-[0_-4px_30px_rgb(0,0,0,0.05)]" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+        <div className="flex items-center justify-around h-16 px-1 relative">
         {mainLinks.map((item) => {
           const isActive = pathname === item.href
           return (
@@ -53,6 +79,10 @@ export function MobileNav() {
             </Link>
           )
         })}
+
+        <div className="w-12 h-12 relative flex items-center justify-center">
+          <ScannerButton mobile onScanComplete={handleScanComplete} />
+        </div>
         
         <DropdownMenu>
           <DropdownMenuTrigger className="flex flex-col items-center justify-center w-full h-full space-y-1 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 outline-none transition-colors">
@@ -72,5 +102,6 @@ export function MobileNav() {
         </DropdownMenu>
       </div>
     </div>
+    </>
   )
 }

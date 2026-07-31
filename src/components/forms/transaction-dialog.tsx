@@ -21,8 +21,27 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { createTransaction, updateTransaction, deleteTransaction } from '@/app/(dashboard)/actions'
 
-export function TransactionDialog({ transaction, accounts, categories }: { transaction?: any, accounts: any[], categories: any[] }) {
-  const [open, setOpen] = useState(false)
+export function TransactionDialog({ 
+  transaction, 
+  accounts, 
+  categories,
+  open: controlledOpen,
+  onOpenChange: setControlledOpen,
+  prefillData,
+  trigger
+}: { 
+  transaction?: any, 
+  accounts: any[], 
+  categories: any[],
+  open?: boolean,
+  onOpenChange?: (open: boolean) => void,
+  prefillData?: { amount?: number | null, description?: string | null, date?: Date | null },
+  trigger?: React.ReactNode
+}) {
+  const [internalOpen, setInternalOpen] = useState(false)
+  const open = controlledOpen !== undefined ? controlledOpen : internalOpen
+  const setOpen = setControlledOpen || setInternalOpen
+  
   const [type, setType] = useState<'INCOME'|'EXPENSE'|'TRANSFER'>(transaction?.type || 'EXPENSE')
   
   const isEdit = !!transaction
@@ -46,12 +65,18 @@ export function TransactionDialog({ transaction, accounts, categories }: { trans
     <div onClick={(e) => e.stopPropagation()}>
       <Dialog open={open} onOpenChange={setOpen}>
         {!isEdit ? (
-          <DialogTrigger {...({ asChild: true } as any)}>
-            <Button className="rounded-xl bg-zinc-900 text-white hover:bg-zinc-800 shadow-md transition-all">
-              <Plus className="mr-2 h-4 w-4" />
-              Nuevo Movimiento
-            </Button>
-          </DialogTrigger>
+          trigger ? (
+            <DialogTrigger asChild>
+              {trigger}
+            </DialogTrigger>
+          ) : (
+            <DialogTrigger {...({ asChild: true } as any)}>
+              <Button className="rounded-xl bg-zinc-900 text-white hover:bg-zinc-800 shadow-md transition-all">
+                <Plus className="mr-2 h-4 w-4" />
+                Nuevo Movimiento
+              </Button>
+            </DialogTrigger>
+          )
         ) : (
           <DropdownMenu>
             <DropdownMenuTrigger className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-md text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-800 dark:hover:text-white transition-colors">
@@ -91,13 +116,13 @@ export function TransactionDialog({ transaction, accounts, categories }: { trans
               </div>
               <div className="space-y-2">
                 <Label htmlFor="amount">Cantidad (€)</Label>
-                <Input id="amount" name="amount" type="number" step="0.01" required defaultValue={transaction?.amount} placeholder="0.00" className="rounded-xl" />
+                <Input id="amount" name="amount" type="number" step="0.01" required defaultValue={transaction?.amount || prefillData?.amount || ""} placeholder="0.00" className="rounded-xl" />
               </div>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="description">Descripción</Label>
-              <Input id="description" name="description" required defaultValue={transaction?.description} placeholder="Ej: Compra supermercado" className="rounded-xl" />
+              <Input id="description" name="description" required defaultValue={transaction?.description || prefillData?.description || ""} placeholder="Ej: Compra supermercado" className="rounded-xl" />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
@@ -138,7 +163,7 @@ export function TransactionDialog({ transaction, accounts, categories }: { trans
 
             <div className="space-y-2">
               <Label htmlFor="date">Fecha</Label>
-              <Input id="date" name="date" type="date" required defaultValue={transaction?.date ? new Date(transaction.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]} className="rounded-xl" />
+              <Input id="date" name="date" type="date" required defaultValue={transaction?.date ? new Date(transaction.date).toISOString().split('T')[0] : (prefillData?.date ? new Date(prefillData.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0])} className="rounded-xl" />
             </div>
 
             <div className="pt-4 flex justify-end gap-3">

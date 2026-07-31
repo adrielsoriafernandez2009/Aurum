@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Card } from '@/components/ui/card'
 import { TransactionDialog } from '@/components/forms/transaction-dialog'
+import { ScannerAction } from '@/components/forms/scanner-action'
 import { getCurrentWorkspace } from '@/lib/data'
 import prisma from '@/lib/prisma'
 
@@ -65,6 +66,7 @@ export default async function MovimientosPage({
             <Download className="mr-2 h-4 w-4" />
             Exportar
           </Button>
+          <ScannerAction accounts={JSON.parse(JSON.stringify(accounts))} categories={JSON.parse(JSON.stringify(categories))} />
           <TransactionDialog accounts={JSON.parse(JSON.stringify(accounts))} categories={JSON.parse(JSON.stringify(categories))} />
         </div>
       </div>

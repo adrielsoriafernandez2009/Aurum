@@ -2,11 +2,19 @@ import { Sidebar } from '@/components/layout/sidebar'
 import { Topbar } from '@/components/layout/topbar'
 import { MobileNav } from '@/components/layout/mobile-nav'
 
-export default function DashboardLayout({
+import { getCurrentWorkspace } from '@/lib/data'
+import prisma from '@/lib/prisma'
+
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const workspace = await getCurrentWorkspace()
+  const [accounts, categories] = await Promise.all([
+    prisma.account.findMany({ where: { workspaceId: workspace.id } }),
+    prisma.category.findMany({ where: { workspaceId: workspace.id } })
+  ])
   return (
     <div className="min-h-screen bg-zinc-50/30 dark:bg-zinc-950">
       <Sidebar />
@@ -18,7 +26,7 @@ export default function DashboardLayout({
           </div>
         </main>
       </div>
-      <MobileNav />
+      <MobileNav accounts={JSON.parse(JSON.stringify(accounts))} categories={JSON.parse(JSON.stringify(categories))} />
     </div>
   )
 }
