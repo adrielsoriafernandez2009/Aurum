@@ -2,6 +2,7 @@ import { getCurrentUser, getCurrentWorkspace } from '@/lib/data'
 import prisma from '@/lib/prisma'
 import { ProfileForm } from './profile-form'
 import { WorkspaceUsers } from './workspace-users'
+import { LogoutButton } from './logout-button'
 
 export const dynamic = 'force-dynamic'
 
@@ -27,9 +28,12 @@ export default async function ConfiguracionPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500 max-w-4xl">
-      <div>
-        <h2 className="text-2xl font-bold tracking-tight">Configuración</h2>
-        <p className="text-muted-foreground mt-1">Administra tu perfil, preferencias y seguridad.</p>
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight">Configuración</h2>
+          <p className="text-muted-foreground mt-1">Administra tu perfil, preferencias y seguridad.</p>
+        </div>
+        <LogoutButton />
       </div>
 
       <div className="grid gap-6">
