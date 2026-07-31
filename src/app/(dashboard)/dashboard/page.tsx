@@ -80,7 +80,7 @@ export default async function DashboardPage() {
         </Card>
 
         {/* Ingresos */}
-        <Card className="col-span-1 flex flex-col justify-center aspect-square bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border-white/20 dark:border-zinc-800/50 shadow-[0_4px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_40px_rgb(0,0,0,0.06)] transition-all">
+        <Card className="col-span-1 lg:col-span-1 flex flex-col justify-center md:block aspect-square md:aspect-auto bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border-white/20 dark:border-zinc-800/50 shadow-[0_4px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_40px_rgb(0,0,0,0.06)] transition-all">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-xs sm:text-sm font-medium">Ingresos</CardTitle>
             <TrendingUp className="h-4 w-4 text-emerald-500" />
@@ -93,7 +93,7 @@ export default async function DashboardPage() {
         </Card>
 
         {/* Gastos */}
-        <Card className="col-span-1 flex flex-col justify-center aspect-square bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border-white/20 dark:border-zinc-800/50 shadow-[0_4px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_40px_rgb(0,0,0,0.06)] transition-all">
+        <Card className="col-span-1 lg:col-span-1 flex flex-col justify-center md:block aspect-square md:aspect-auto bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border-white/20 dark:border-zinc-800/50 shadow-[0_4px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_40px_rgb(0,0,0,0.06)] transition-all">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-xs sm:text-sm font-medium">Gastos</CardTitle>
             <ArrowDownIcon className="h-4 w-4 text-rose-500" />
