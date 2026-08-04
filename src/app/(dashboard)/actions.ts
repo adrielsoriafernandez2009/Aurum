@@ -429,3 +429,43 @@ export async function createSharedWorkspace(formData: FormData) {
   cookieStore.set('aurum_active_workspace', newWorkspace.id, { path: '/' })
   revalidatePath('/', 'layout')
 }
+
+export async function deleteSharedWorkspace(workspaceId: string) {
+  const { getCurrentUser } = await import('@/lib/data')
+  const user = await getCurrentUser()
+
+  // Verify the user is the OWNER of this workspace
+  const wu = await prisma.workspaceUser.findUnique({
+    where: { userId_workspaceId: { userId: user.id, workspaceId } }
+  })
+
+  if (!wu || wu.role !== 'OWNER') {
+    throw new Error('No tienes permiso para eliminar este espacio.')
+  }
+
+  // Find user's personal workspace to redirect to
+  const personalWu = await prisma.workspaceUser.findFirst({
+    where: { userId: user.id, role: 'OWNER' },
+    orderBy: { workspace: { createdAt: 'asc' } }
+  })
+
+  if (personalWu && personalWu.workspaceId === workspaceId) {
+    throw new Error('No puedes eliminar tu cuenta personal.')
+  }
+
+  // Delete the workspace
+  await prisma.workspace.delete({
+    where: { id: workspaceId }
+  })
+
+  // Set active workspace to personal workspace
+  const { cookies } = await import('next/headers')
+  const cookieStore = await cookies()
+  if (personalWu) {
+    cookieStore.set('aurum_active_workspace', personalWu.workspaceId, { path: '/' })
+  } else {
+    cookieStore.delete('aurum_active_workspace')
+  }
+
+  revalidatePath('/', 'layout')
+}

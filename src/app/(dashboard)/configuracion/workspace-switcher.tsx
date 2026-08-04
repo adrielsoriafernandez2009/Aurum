@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Wallet, Users, Plus, CheckCircle2, Building2 } from 'lucide-react'
+import { Wallet, Users, Plus, CheckCircle2, Building2, Trash2 } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -14,7 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { setActiveWorkspace, createSharedWorkspace } from '../actions'
+import { setActiveWorkspace, createSharedWorkspace, deleteSharedWorkspace } from '../actions'
 
 type Workspace = {
   id: string
@@ -129,6 +129,22 @@ export function WorkspaceSwitcher({
                 ) : (
                   <Button disabled={loadingId === wu.workspace.id} variant="outline" size="sm" className="rounded-xl">
                     {loadingId === wu.workspace.id ? 'Cambiando...' : 'Entrar'}
+                  </Button>
+                )}
+                {wu.role === 'OWNER' && (
+                  <Button 
+                    variant="ghost" 
+                    size="icon-sm" 
+                    className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/50 rounded-xl"
+                    title="Eliminar cuenta"
+                    onClick={(e) => {
+                      e.stopPropagation() // Prevent clicking the parent div
+                      if (window.confirm('¿Seguro que deseas eliminar esta cuenta compartida? Se borrarán todos sus datos y no se podrá recuperar.')) {
+                        deleteSharedWorkspace(wu.workspace.id).catch(err => alert(err.message))
+                      }
+                    }}
+                  >
+                    <Trash2 className="h-4 w-4" />
                   </Button>
                 )}
               </div>

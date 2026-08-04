@@ -56,7 +56,11 @@ export default async function ConfiguracionPage() {
         
         <ProfileForm user={user} />
         
-        <WorkspaceUsers workspaceUsers={currentWorkspaceUsers} currentUserId={user.id} />
+        <WorkspaceUsers 
+          workspaceUsers={currentWorkspaceUsers} 
+          currentUserId={user.id} 
+          isPersonalWorkspace={workspace.id === personalWorkspace.workspace.id}
+        />
       </div>
     </div>
   )
