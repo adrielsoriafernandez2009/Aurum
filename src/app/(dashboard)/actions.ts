@@ -388,3 +388,44 @@ export async function removeUserFromWorkspace(userId: string) {
   
   revalidatePath('/configuracion')
 }
+
+export async function setActiveWorkspace(workspaceId: string) {
+  const { cookies } = await import('next/headers')
+  const cookieStore = await cookies()
+  cookieStore.set('aurum_active_workspace', workspaceId, { path: '/' })
+  revalidatePath('/', 'layout')
+}
+
+export async function createSharedWorkspace(formData: FormData) {
+  const { getCurrentUser } = await import('@/lib/data')
+  const user = await getCurrentUser()
+  const name = formData.get('name') as string
+
+  const newWorkspace = await prisma.workspace.create({
+    data: {
+      name,
+      users: {
+        create: {
+          userId: user.id,
+          role: 'OWNER'
+        }
+      }
+    }
+  })
+
+  // Create default categories for the new shared workspace
+  await prisma.category.createMany({
+    data: [
+      { workspaceId: newWorkspace.id, name: 'Alimentación', type: 'EXPENSE', icon: 'ShoppingCart', color: 'text-orange-500' },
+      { workspaceId: newWorkspace.id, name: 'Vivienda', type: 'EXPENSE', icon: 'Home', color: 'text-blue-500' },
+      { workspaceId: newWorkspace.id, name: 'Transporte', type: 'EXPENSE', icon: 'Car', color: 'text-gray-500' },
+      { workspaceId: newWorkspace.id, name: 'Ocio', type: 'EXPENSE', icon: 'Coffee', color: 'text-pink-500' },
+      { workspaceId: newWorkspace.id, name: 'Salario', type: 'INCOME', icon: 'Briefcase', color: 'text-emerald-500' },
+    ]
+  })
+
+  const { cookies } = await import('next/headers')
+  const cookieStore = await cookies()
+  cookieStore.set('aurum_active_workspace', newWorkspace.id, { path: '/' })
+  revalidatePath('/', 'layout')
+}
