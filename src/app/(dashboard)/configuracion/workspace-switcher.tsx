@@ -137,11 +137,11 @@ export function WorkspaceSwitcher({
 
           <div className="pt-2">
             <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" className="w-full rounded-xl border-dashed border-2 hover:bg-zinc-50 dark:hover:bg-zinc-900">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Crear nueva cuenta compartida
-                </Button>
+              <DialogTrigger render={
+                <Button variant="outline" className="w-full rounded-xl border-dashed border-2 hover:bg-zinc-50 dark:hover:bg-zinc-900" />
+              }>
+                <Plus className="h-4 w-4 mr-2" />
+                Crear nueva cuenta compartida
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px] rounded-2xl bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border-white/20 dark:border-zinc-800/50">
                 <DialogHeader>
