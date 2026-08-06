@@ -469,3 +469,47 @@ export async function deleteSharedWorkspace(workspaceId: string) {
 
   revalidatePath('/', 'layout')
 }
+
+export async function createCategory(formData: FormData) {
+  const { getCurrentWorkspace } = await import('@/lib/data')
+  const workspace = await getCurrentWorkspace()
+
+  const name = formData.get('name') as string
+  const type = formData.get('type') as string
+  const color = formData.get('color') as string
+
+  if (!name || !type || !color) {
+    throw new Error('Faltan campos requeridos')
+  }
+
+  await prisma.category.create({
+    data: {
+      workspaceId: workspace.id,
+      name,
+      type,
+      color,
+    }
+  })
+
+  revalidatePath('/', 'layout')
+}
+
+export async function deleteCategory(categoryId: string) {
+  const { getCurrentWorkspace } = await import('@/lib/data')
+  const workspace = await getCurrentWorkspace()
+
+  const category = await prisma.category.findFirst({
+    where: {
+      id: categoryId,
+      workspaceId: workspace.id
+    }
+  })
+
+  if (!category) throw new Error('Categoría no encontrada')
+
+  await prisma.category.delete({
+    where: { id: categoryId }
+  })
+
+  revalidatePath('/', 'layout')
+}

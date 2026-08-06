@@ -20,6 +20,7 @@ import {
 import { Card } from '@/components/ui/card'
 import { TransactionDialog } from '@/components/forms/transaction-dialog'
 import { ScannerAction } from '@/components/forms/scanner-action'
+import { SearchAndFilters } from './search-filters'
 import { getCurrentWorkspace } from '@/lib/data'
 import prisma from '@/lib/prisma'
 
@@ -28,16 +29,27 @@ export const dynamic = 'force-dynamic'
 export default async function MovimientosPage({
   searchParams,
 }: {
-  searchParams: { q?: string }
+  searchParams: { q?: string, category?: string, account?: string, type?: string }
 }) {
   const workspace = await getCurrentWorkspace()
   const query = searchParams?.q || ''
+  const categoryParam = searchParams?.category || ''
+  const accountParam = searchParams?.account || ''
+  const typeParam = searchParams?.type || ''
   
   const whereClause: any = { workspaceId: workspace.id }
+  
+  if (categoryParam) whereClause.categoryId = categoryParam
+  if (accountParam) whereClause.accountId = accountParam
+  if (typeParam) whereClause.type = typeParam
+  
   if (query) {
+    const numQuery = parseFloat(query)
     whereClause.OR = [
-      { description: { contains: query, mode: 'insensitive' } }
-      // Category name search requires more complex relation filtering but description is usually enough
+      { description: { contains: query, mode: 'insensitive' } },
+      { category: { name: { contains: query, mode: 'insensitive' } } },
+      { account: { name: { contains: query, mode: 'insensitive' } } },
+      ...(isNaN(numQuery) ? [] : [{ amount: { equals: numQuery } }])
     ]
   }
   
@@ -72,23 +84,7 @@ export default async function MovimientosPage({
       </div>
 
       <Card className="bg-white/60 dark:bg-zinc-900/60 backdrop-blur-xl border-white/20 dark:border-zinc-800/50 shadow-sm overflow-hidden rounded-2xl">
-        <div className="p-4 border-b border-zinc-200/50 dark:border-zinc-800/50 flex flex-col sm:flex-row gap-4 items-center justify-between">
-          <form action="/movimientos" method="GET" className="relative w-full sm:w-96">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
-            <Input 
-              name="q"
-              defaultValue={query}
-              placeholder="Buscar por nombre, categoría o cantidad..." 
-              className="pl-10 rounded-xl bg-white/50 dark:bg-zinc-950/50 border-zinc-200 dark:border-zinc-800 h-8 text-sm"
-            />
-          </form>
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <Button variant="outline" size="sm" className="rounded-xl h-10 bg-white/50 dark:bg-zinc-900/50 hover:bg-white dark:hover:bg-zinc-900 transition-all">
-              <Filter className="mr-2 h-4 w-4" />
-              Filtros
-            </Button>
-          </div>
-        </div>
+        <SearchAndFilters accounts={accounts} categories={categories} />
         
         {movimientos.length === 0 ? (
           <div className="text-center p-12">

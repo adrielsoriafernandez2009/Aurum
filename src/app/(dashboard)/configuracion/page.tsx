@@ -4,6 +4,7 @@ import { ProfileForm } from './profile-form'
 import { WorkspaceUsers } from './workspace-users'
 import { LogoutButton } from './logout-button'
 import { WorkspaceSwitcher } from './workspace-switcher'
+import { CategoriesManager } from './categories-manager'
 
 export const dynamic = 'force-dynamic'
 
@@ -37,6 +38,12 @@ export default async function ConfiguracionPage() {
     }
   })
 
+  // Fetch categories for the current workspace
+  const categories = await prisma.category.findMany({
+    where: { workspaceId: workspace.id },
+    orderBy: { createdAt: 'desc' }
+  })
+
   return (
     <div className="space-y-6 animate-in fade-in duration-500 max-w-4xl">
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
@@ -61,6 +68,8 @@ export default async function ConfiguracionPage() {
           currentUserId={user.id} 
           isPersonalWorkspace={workspace.id === personalWorkspace.workspace.id}
         />
+
+        <CategoriesManager categories={categories} />
       </div>
     </div>
   )
