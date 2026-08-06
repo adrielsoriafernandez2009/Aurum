@@ -17,7 +17,7 @@ export function ScannerAction({ accounts, categories }: { accounts: any[], categ
   return (
     <>
       <div className="hidden sm:block">
-        <ScannerButton onScanComplete={handleScanComplete} />
+        <ScannerButton categories={categories} onScanComplete={handleScanComplete} />
       </div>
       
       <TransactionDialog 
@@ -28,7 +28,8 @@ export function ScannerAction({ accounts, categories }: { accounts: any[], categ
         prefillData={{
           amount: scanData?.amount,
           description: scanData?.merchant,
-          date: scanData?.date
+          date: scanData?.date,
+          categoryId: scanData?.categoryId
         }}
         trigger={<div className="hidden" />}
       />

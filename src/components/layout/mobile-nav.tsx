@@ -60,7 +60,8 @@ export function MobileNav({ accounts = [], categories = [] }: { accounts?: any[]
         prefillData={{
           amount: scanData?.amount,
           description: scanData?.merchant,
-          date: scanData?.date
+          date: scanData?.date,
+          categoryId: scanData?.categoryId
         }}
         trigger={<div className="hidden" />}
       />
@@ -82,7 +83,7 @@ export function MobileNav({ accounts = [], categories = [] }: { accounts?: any[]
         })}
 
         <div className="w-12 h-12 relative flex items-center justify-center mx-2">
-          <ScannerButton mobile onScanComplete={handleScanComplete} />
+          <ScannerButton mobile categories={categories} onScanComplete={handleScanComplete} />
         </div>
         
         {mainLinks.slice(2).map((item) => {

@@ -35,7 +35,7 @@ export function TransactionDialog({
   categories: any[],
   open?: boolean,
   onOpenChange?: (open: boolean) => void,
-  prefillData?: { amount?: number | null, description?: string | null, date?: Date | null },
+  prefillData?: { amount?: number | null, description?: string | null, date?: Date | null, categoryId?: string | null },
   trigger?: React.ReactNode
 }) {
   const [internalOpen, setInternalOpen] = useState(false)
@@ -151,7 +151,7 @@ export function TransactionDialog({
               ) : (
                 <div className="space-y-2">
                   <Label htmlFor="categoryId">Categoría</Label>
-                  <select id="categoryId" name="categoryId" required defaultValue={transaction?.categoryId || ""} className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                  <select id="categoryId" name="categoryId" required defaultValue={transaction?.categoryId || prefillData?.categoryId || ""} className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
                     <option value="" disabled>Selecciona categoría</option>
                     {categories.filter(c => c.type === type).map(cat => (
                       <option key={cat.id} value={cat.id}>{cat.name}</option>
