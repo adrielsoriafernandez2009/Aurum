@@ -137,63 +137,101 @@ export async function scanReceipt(
 
   if (onProgress) onProgress('Calculando importes...', 0.9);
 
-  // --- 2. EXTRACT TOTAL (Bounding Boxes & Heuristics) ---
+  // --- 2. EXTRACT TOTAL (Bounding Boxes, Math Verification & Heuristics) ---
   let amount: number | null = null;
   
-  // Find the word "TOTAL" or variations (e.g. T0TAL, TQTAL) using fuzzy matching
-  let totalWordBox: any = null;
-  for (const w of words) {
-    if (similarity(w.text, 'TOTAL') > 80 || similarity(w.text, 'IMPORTE') > 80) {
-      totalWordBox = w.bbox;
-      break;
+  // Helper to extract clean numbers from dirty OCR strings (e.g., "12,S0" -> 12.50)
+  const extractCleanNumbers = (str: string): number[] => {
+    // Replace typical OCR errors in numbers
+    let cleaned = str.replace(/[OQ]/gi, '0').replace(/[S]/gi, '5').replace(/[B]/gi, '8');
+    // Find things that look like numbers (allow spaces around commas/dots)
+    const regex = /(\d+)\s*[\.,\-]\s*(\d{2})/g;
+    const nums: number[] = [];
+    let m;
+    while ((m = regex.exec(cleaned)) !== null) {
+      nums.push(parseFloat(`${m[1]}.${m[2]}`));
     }
-  }
+    return nums;
+  };
 
-  if (totalWordBox) {
-    // We found TOTAL. Look for numbers strictly to the right (x > totalX) and roughly on the same Y axis
-    const yMargin = 30; // Acceptable vertical drift
-    const potentialNumbers = words.filter((w: any) => {
-      // Must be to the right
-      if (w.bbox.x0 < totalWordBox.x1) return false;
-      // Must be on similar Y axis
-      if (Math.abs(w.bbox.y0 - totalWordBox.y0) > yMargin) return false;
-      // Must look like a number
-      return /\d+[\.,]\d{2}/.test(w.text);
-    });
+  // Find all numbers in the bottom half of the receipt
+  const bottomLines = lines.slice(Math.max(0, lines.length - 30));
+  const bottomNumbers: number[] = [];
+  bottomLines.forEach(line => {
+    const nums = extractCleanNumbers(line);
+    bottomNumbers.push(...nums);
+  });
 
-    if (potentialNumbers.length > 0) {
-      // Take the right-most number on that line
-      const rightMost = potentialNumbers.reduce((prev: any, curr: any) => (curr.bbox.x0 > prev.bbox.x0) ? curr : prev);
-      const match = rightMost.text.match(/(\d+[\.,]\d{2})/);
-      if (match) {
-        amount = parseFloat(match[1].replace(',', '.'));
-      }
-    }
-  }
-
-  // Fallback: If Bounding Box approach failed, use Sanity-Checked Heuristics
-  if (!amount) {
-    const bottomLines = lines.slice(Math.max(0, lines.length - 20));
-    let maxAmount = 0;
-    const numRegex = /(\d+[\.,]\d{2})/g;
-    
-    for (const line of bottomLines) {
-      const upper = line.toUpperCase();
-      // Sanity Checks: Skip tax lines, cash given, base, etc.
-      if (upper.includes('%') || upper.includes('IVA') || upper.includes('BASE') || 
-          upper.includes('ENTREGADO') || upper.includes('CAMBIO') || upper.includes('EFECTIVO')) {
-        continue;
-      }
-
-      let m;
-      while ((m = numRegex.exec(line)) !== null) {
-        const val = parseFloat(m[1].replace(',', '.'));
-        if (val > maxAmount && val < 5000) { // sanity max value
-          maxAmount = val;
+  // A. Mathematical Verification (Base + IVA = Total)
+  // We look for a combination of 3 numbers where A + B = C (with small tolerance for float issues)
+  let mathVerifiedTotal: number | null = null;
+  if (bottomNumbers.length >= 3) {
+    // Sort ascending to easily check pairs
+    const sorted = [...new Set(bottomNumbers)].sort((a, b) => a - b);
+    for (let i = 0; i < sorted.length; i++) {
+      for (let j = i; j < sorted.length; j++) {
+        const sum = sorted[i] + sorted[j];
+        // Look for the sum in the array
+        const found = sorted.find(n => Math.abs(n - sum) < 0.02);
+        // Ensure the sum isn't suspiciously large (> 5000) or trivial (0+X=X)
+        if (found && found < 5000 && sorted[i] > 0.05 && sorted[j] > 0.05) {
+          mathVerifiedTotal = found;
+          // Favor the largest verified sum if there are multiple (e.g. 10% + 21% lines)
         }
       }
     }
-    if (maxAmount > 0) amount = maxAmount;
+  }
+
+  if (mathVerifiedTotal) {
+    amount = mathVerifiedTotal;
+  } else {
+    // B. Find the word "TOTAL" or variations (e.g. T0TAL, TQTAL) using fuzzy matching
+    let totalWordBox: any = null;
+    for (const w of words) {
+      if (similarity(w.text, 'TOTAL') > 80 || similarity(w.text, 'IMPORTE') > 80) {
+        totalWordBox = w.bbox;
+        break;
+      }
+    }
+
+    if (totalWordBox) {
+      // We found TOTAL. Look for numbers strictly to the right (x > totalX) and roughly on the same Y axis
+      const yMargin = 30;
+      const potentialNumbers = words.filter((w: any) => {
+        if (w.bbox.x0 < totalWordBox.x1) return false;
+        if (Math.abs(w.bbox.y0 - totalWordBox.y0) > yMargin) return false;
+        return extractCleanNumbers(w.text).length > 0;
+      });
+
+      if (potentialNumbers.length > 0) {
+        const rightMost = potentialNumbers.reduce((prev: any, curr: any) => (curr.bbox.x0 > prev.bbox.x0) ? curr : prev);
+        const nums = extractCleanNumbers(rightMost.text);
+        if (nums.length > 0) amount = nums[0];
+      }
+    }
+
+    // C. Fallback: Aggressive Sanity-Checked Heuristics
+    if (!amount) {
+      let maxAmount = 0;
+      
+      for (const line of bottomLines) {
+        const upper = line.toUpperCase();
+        // AGGRESSIVE Sanity Checks: Skip tax lines, cash given, change
+        if (upper.includes('%') || upper.includes('IVA') || upper.includes('BASE') || 
+            upper.includes('ENTREGADO') || upper.includes('CAMBIO') || 
+            upper.includes('EFECTIVO') || upper.includes('VUELTAS') || upper.includes('SU PAGO')) {
+          continue;
+        }
+
+        const nums = extractCleanNumbers(line);
+        for (const val of nums) {
+          if (val > maxAmount && val < 5000) {
+            maxAmount = val;
+          }
+        }
+      }
+      if (maxAmount > 0) amount = maxAmount;
+    }
   }
 
   // --- 3. EXTRACT DATE (Strict Verification) ---
